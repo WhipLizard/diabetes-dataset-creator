@@ -1,51 +1,60 @@
-import pandas as pd
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score
-from sklearn.model_selection import train_test_split
 import csv
+import random
+import time
 
-fh=open("diabetes.csv","a")
-
+start=time.time()
+fh=open("diabetes.csv","w")
 data=csv.writer(fh)
+data.writerow(['glucose','diastolic','triceps','insulin','bmi','dfp','age','diabetes'])
+for i in range(2000):
+    #glucose level is based on fasting blood sugar data
+    glucose=random.randint(70,130)
+    
+    if glucose >70 and glucose<99:
+        #diastolic pres is the pres in the arteries when the heart is at rest betwn the beats
+        diastolic=random.randint(60,80)
+    elif glucose>99 and glucose<125:
+        diastolic=random.randint(80,90)
+    elif glucose>125:
+        diastolic=random.randint(90,110)
+        
+    #tricep for normal weighted people
+    triceps=random.randint(6,20)
+    
+    if glucose <99 :
+        insulin=random.randint(5,20)
+    elif glucose>99 and glucose<120:
+        insulin=random.randint(20,50)
+    elif glucose>120:
+        insulin=random.randint(70,180)
+        
+    #normal person bmi 18.5-24.9
+    #diabetic person bmi
+    bmi=round(random.uniform(18,25),2)
+    
+    #dfp diabetic foot pathology
+    dfp=round(random.uniform(0.1,2.0),3)
+    
+    age=random.randint(10,85)
+    diabetic=0
+    if glucose >= 126 or insulin > 50 or bmi > 24.9 or age>45:
+        diabetic = 1
 
-df=pd.read_csv("diabetes.csv")
-
-y=df['diabetes']
-x=df[['glucose', 'diastolic', 'triceps', 'insulin', 'bmi', 'dfp', 'age',]]
-
-x_train,x_test,y_train,y_test=train_test_split(x,y,train_size=0.9)
-
-model=LogisticRegression()
-
-
-model.fit(x_train,y_train)
-
-y_pred=model.predict(x_test)
-
-print("accuracy=",accuracy_score(y_test,y_pred)*100,"%")
-
-glucose=int(input("enter glucose"))
-diastolic=int(input("enter diastolic"))
-triceps=int(input("enter triceps"))
-insulin=int(input("enter insulin"))
-bmi=float(input("enter bmi"))
-dfp=float(input("enter dfp"))
-age=int(input("enter age"))
-diabetic=model.predict([[glucose,diastolic,triceps,insulin,bmi,dfp,age,]])
-if diabetic==0:
-  print("the person is not diabetes")
-else:
-  print("the person is diabetic")
-  diabetic=1
-
-li=[glucose,diastolic,triceps,insulin,bmi,dfp,age,diabetic]
-data.writerow(li)
+    li=[glucose,diastolic,triceps,insulin,bmi,dfp,age,diabetic]
+    data.writerow(li)
 
 fh.close()
-'''
-file=open("diabetes.csv","r")
+end=time.time()
+print("done time recq = ",end-start)
+    
+    
+        
+    
+    
+    
+    
 
-df=pd.read_csv("diabetes.csv")
+    
+        
+    
 
-print(df)
-'''
